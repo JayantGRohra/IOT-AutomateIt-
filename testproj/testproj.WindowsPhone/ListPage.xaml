@@ -1,0 +1,79 @@
+﻿<Page
+    x:Class="testproj.ListPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:testproj"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:valueconverter="using:testproj.ValueConverters"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    
+    <Page.Resources>
+        <valueconverter:IsCompleteToBooleanConverter x:Key="IsCompleteToBooleanConverter" />
+        <valueconverter:DateTimeToStringConverter x:Key="DateTimeToStringConverter"/>
+        <MenuFlyout x:Name="deleteMenuFlyout" Placement="Bottom">
+            <MenuFlyout.MenuFlyoutPresenterStyle>
+                <Style TargetType="MenuFlyoutPresenter">
+                    <Setter Property="RequestedTheme" Value="Light"></Setter>
+                </Style>
+            </MenuFlyout.MenuFlyoutPresenterStyle>
+            <MenuFlyoutItem Text="delete.." Name="DeleteButton" Click="Delete_Click"></MenuFlyoutItem>
+        </MenuFlyout>
+    </Page.Resources>
+    
+    <Page.BottomAppBar>
+        <CommandBar >
+            <CommandBar.PrimaryCommands>
+                <AppBarButton Icon="Add" Label="add event" Name=" AddRitual" Click="AddRitual_Click"
+                          IsEnabled="{Binding IsContentAvailable, Mode=OneWay}"></AppBarButton>
+                <AppBarButton Icon="ReportHacked" Label="security" Name="AddAlert" Click="AlertPage_Click"
+                          IsEnabled="{Binding IsContentAvailable, Mode=OneWay}"></AppBarButton>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton Label="about" Name="ViewAbout" Click="About_Click"></AppBarButton>               
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <ScrollViewer>
+        <StackPanel Margin="20,20,20,20">
+            <TextBlock Style="{StaticResource HeaderTextBlockStyle}" Foreground="Bisque" FontSize="40">SmartCalendar</TextBlock>
+            <TextBlock Style="{StaticResource TitleTextBlockStyle}" Foreground="{StaticResource PhoneMidBrush}" Margin="0,10,0,0">Schedule your Day!</TextBlock>
+            <Grid Margin="0,20,0,0">
+                <Grid.Resources>
+                    <DataTemplate x:Name="dataTemplate">
+                        <Grid Holding="Grid_Holding">
+                            <Border BorderBrush="Silver" BorderThickness="0,1,0,1" Width="{StaticResource ContentDialogContentLandscapeWidth}" >
+                                <StackPanel Orientation="Vertical">
+
+                                    <TextBlock Text="{Binding Name}" Style="{StaticResource SubheaderTextBlockStyle}" Foreground="{ThemeResource PhoneAccentBrush}"></TextBlock>
+                                    <TextBlock Text="{Binding EventDate , Converter={StaticResource DateTimeToStringConverter},  ConverterParameter='dd-MMM-yy'}" 
+                                           Style="{StaticResource BaseTextBlockStyle}" Foreground="{ThemeResource PhoneMidBrush}"  HorizontalAlignment="Left"></TextBlock>
+                                    <TextBlock Text="{Binding EventDate , Converter={StaticResource DateTimeToStringConverter},ConverterParameter='HH:mm'}" Foreground="{ThemeResource PhoneLowBrush}" Style="{StaticResource BaseTextBlockStyle}" ></TextBlock>
+
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </DataTemplate>
+                </Grid.Resources>
+                <ListView x:Name="itemsControl" IsHoldingEnabled="True"
+                              ItemsSource="{Binding RitualCollection}" 
+                              ItemTemplate="{StaticResource dataTemplate}">
+                  <!--  <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment"
+                                    Value="Stretch"></Setter>
+                        </Style>
+                    </ListView.ItemContainerStyle>-->
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="Margin" Value="0,0,0,20" />
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+        </StackPanel>
+
+    </ScrollViewer>
+</Page>
